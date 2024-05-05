@@ -2,4 +2,4 @@
 FROM mysql:latest
 
 # Copy the SQL script to initialize the database (change "init.sql" to your desired SQL script name)
-COPY ./sql/category-database.sql /docker-entrypoint-initdb.d/category-database.sql
+COPY ./sql/category-db.sql /docker-entrypoint-initdb.d/category-db.sql

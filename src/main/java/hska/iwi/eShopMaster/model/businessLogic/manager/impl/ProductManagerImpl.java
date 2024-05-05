@@ -18,7 +18,7 @@ public class ProductManagerImpl implements ProductManager {
 	private final ProductConnection productConnection = Feign.builder()
 			.encoder(new GsonEncoder())
 			.decoder(new GsonDecoder())
-			.target(ProductConnection.class, "http://product:8080/api/v1/procut");
+			.target(ProductConnection.class, "http://product:8080/api/v1/product");
 
 
 	public ProductManagerImpl() {}

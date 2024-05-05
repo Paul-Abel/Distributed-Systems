@@ -47,8 +47,8 @@ services:
         aliases:
           - category-db
 
-  category-ms:
-    hostname: category-ms
+  category:
+    hostname: category
     build:
       context: ./services/category
       dockerfile: docker/DockerfileCategoryMS
@@ -76,8 +76,8 @@ services:
         aliases:
           - product-db
 
-  product-ms:
-    hostname: product-ms
+  product:
+    hostname: product
     build:
       context: ./services/product
       dockerfile: docker/DockerfileProductMS

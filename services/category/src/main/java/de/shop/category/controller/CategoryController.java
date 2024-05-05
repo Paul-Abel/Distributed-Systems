@@ -1,5 +1,7 @@
 package de.shop.category.controller;
 
+import de.shop.category.clients.ProductsClient;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import de.shop.category.service.CategoryService;
@@ -14,6 +16,8 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/v1/category")
 public class CategoryController {
+    @Autowired
+    private ProductsClient productsClient;
 
     private final CategoryService categoryService;
 
@@ -35,6 +39,10 @@ public class CategoryController {
 
     @DeleteMapping()
     public ResponseEntity<Object> deleteCategory(@PathVariable Long id){
+        var products = productsClient.getProducts(id, null, null, null);
+        if (products.size() > 0) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("A category can only be deleted if there aren't any products linked to it.");
+        }
         this.categoryService.deleteCategory(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

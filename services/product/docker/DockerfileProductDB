@@ -2,4 +2,4 @@
 FROM mysql:latest
 
 # Copy the SQL script to initialize the database (change "init.sql" to your desired SQL script name)
-COPY ./sql/product-database.sql /docker-entrypoint-initdb.d/product-database.sql
+COPY ./sql/product-db.sql /docker-entrypoint-initdb.d/product-db.sql

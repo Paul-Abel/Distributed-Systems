@@ -77,6 +77,14 @@
             <version>5.1.37</version>
         </dependency>
 
+        <!-- Feign Client -->
+        <dependency>
+            <groupId>io.github.openfeign</groupId>
+            <artifactId>feign-gson</artifactId>
+            <version>9.7.0</version>
+        </dependency>
+
+
 
  	</dependencies>
 </project>

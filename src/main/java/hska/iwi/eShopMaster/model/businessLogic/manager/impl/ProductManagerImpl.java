@@ -41,7 +41,7 @@ public class ProductManagerImpl implements ProductManager {
 	}
 	
 	public int addProduct(String name, double price, int categoryId, String details) {
-		Map<String, Object> request = new HashMap<>();
+		Map<String, Object> request = new HashMap<String, Object>();
 		request.put("categoryId", categoryId);
 		request.put("name", name);
 		request.put("details", details);

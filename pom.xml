@@ -24,6 +24,12 @@
             <version>${struts2.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>io.github.openfeign</groupId>
+            <artifactId>feign-gson</artifactId>
+            <version>9.7.0</version>
+        </dependency>
+
         <!-- Logging -->
 <!-- 		  <dependency>
 		    <groupId>org.apache.logging.log4j</groupId>

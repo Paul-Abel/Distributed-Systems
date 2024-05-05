@@ -1,22 +1,30 @@
 package hska.iwi.eShopMaster.model.businessLogic.manager.impl;
 
-import hska.iwi.eShopMaster.model.businessLogic.manager.CategoryManager;
+import feign.Feign;
+import feign.gson.GsonDecoder;
+import feign.gson.GsonEncoder;
+import hska.iwi.eShopMaster.connection.ProductConnection;
+
 import hska.iwi.eShopMaster.model.businessLogic.manager.ProductManager;
 import hska.iwi.eShopMaster.model.database.dataAccessObjects.ProductDAO;
-import hska.iwi.eShopMaster.model.database.dataobjects.Category;
 import hska.iwi.eShopMaster.model.database.dataobjects.Product;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ProductManagerImpl implements ProductManager {
-	private ProductDAO helper;
-	
-	public ProductManagerImpl() {
-		helper = new ProductDAO();
-	}
+
+	private final ProductConnection productConnection = Feign.builder()
+			.encoder(new GsonEncoder())
+			.decoder(new GsonDecoder())
+			.target(ProductConnection.class, "http://product:8080/api/v1/procut");
+
+
+	public ProductManagerImpl() {}
 
 	public List<Product> getProducts() {
-		return helper.getObjectList();
+		return productConnection.getProducts();
 	}
 	
 	public List<Product> getProductsForSearchValues(String searchDescription,
@@ -25,37 +33,26 @@ public class ProductManagerImpl implements ProductManager {
 	}
 
 	public Product getProductById(int id) {
-		return helper.getObjectById(id);
+		return productConnection.getProduct((long) id);
 	}
 
 	public Product getProductByName(String name) {
-		return helper.getObjectByName(name);
+		return null;
 	}
 	
 	public int addProduct(String name, double price, int categoryId, String details) {
-		int productId = -1;
-		
-		CategoryManager categoryManager = new CategoryManagerImpl();
-		Category category = categoryManager.getCategory(categoryId);
-		
-		if(category != null){
-			Product product;
-			if(details == null){
-				product = new Product(name, price, category);	
-			} else{
-				product = new Product(name, price, category, details);
-			}
-			
-			helper.saveObject(product);
-			productId = product.getId();
-		}
-			 
-		return productId;
+		Map<String, Object> request = new HashMap<>();
+		request.put("categoryId", categoryId);
+		request.put("name", name);
+		request.put("details", details);
+		request.put("price", price);
+
+		return productConnection.createProduct(request).getId();
 	}
 	
 
 	public void deleteProductById(int id) {
-		helper.deleteById(id);
+		productConnection.deleteProduct((long) id);
 	}
 
 	public boolean deleteProductsByCategoryId(int categoryId) {

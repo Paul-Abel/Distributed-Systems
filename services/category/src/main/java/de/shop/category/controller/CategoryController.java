@@ -25,16 +25,14 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<List<Category>> getCategories(){
-        var categoryList = this.categoryService.findAllCategories();
-        return new ResponseEntity<>(categoryList, HttpStatus.OK);
+    @GetMapping()
+    public ResponseEntity<List<Category>> getCategories() {
+        return new ResponseEntity<>(this.categoryService.findAllCategories(), HttpStatus.OK);
     }
 
-    @GetMapping()
-    public ResponseEntity<Optional<Category>> getCategory(@PathVariable Long id){
-        var category = this.categoryService.findCategory(id);
-        return new ResponseEntity<>(category, HttpStatus.OK);
+    @GetMapping("{id}")
+    public ResponseEntity<Optional<Category>> getCategory(@PathVariable Long id) {
+        return new ResponseEntity<>(this.categoryService.findCategory(id), HttpStatus.OK);
     }
 
     @DeleteMapping()

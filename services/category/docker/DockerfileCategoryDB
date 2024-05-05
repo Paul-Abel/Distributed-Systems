@@ -1,0 +1,5 @@
+# Use an official MySQL runtime as the base image
+FROM mysql:latest
+
+# Copy the SQL script to initialize the database (change "init.sql" to your desired SQL script name)
+COPY ./sql/category-database.sql /docker-entrypoint-initdb.d/category-database.sql

@@ -1,0 +1,92 @@
+version: '3.2'
+services:
+  web-shop-db-image:
+    build:
+      context: ./
+      dockerfile: ./docker/DockerfileMySQL
+    volumes:
+      - "./.data/shop:/var/lib/mysql"
+    environment:
+      MYSQL_ROOT_PASSWORD: c8de110f37300a53a971749
+      MYSQL_DATABASE: webshop
+      MYSQL_USER: webshopuser
+      MYSQL_PASSWORD: 240b2c6d58ff2ce2f508b49f
+    ports:
+      - "3306:3306"
+    networks:
+      backend:
+        aliases:
+          - web-shop-db-image
+
+  legacywebshop:
+    build:
+      context: ./
+      dockerfile: ./docker/Dockerfile
+    ports:
+      - "8888:8080"
+    networks:
+      backend:
+        aliases:
+          - legacywebshop
+
+
+  category-db:
+    hostname: category-db
+    build:
+      context: ./services/category
+      dockerfile: docker/DockerfileCategoryDB
+    volumes:
+      - "./.data/category:/var/lib/mysql"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_TCP_PORT: 3308
+    ports:
+      - "3308:3308"
+    networks:
+      backend:
+        aliases:
+          - category-db
+
+  category-ms:
+    hostname: category-ms
+    build:
+      context: ./services/category
+      dockerfile: docker/DockerfileCategoryMS
+    ports:
+      - "8080:8080"
+    depends_on:
+      - category-db
+    networks:
+      - backend
+
+  product-db:
+    hostname: product-db
+    build:
+      context: ./services/product
+      dockerfile: docker/DockerfileProductDB
+    volumes:
+      - "./.data/product:/var/lib/mysql"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_TCP_PORT: 3307
+    ports:
+      - "3307:3307"
+    networks:
+      backend:
+        aliases:
+          - product-db
+
+  product-ms:
+    hostname: product-ms
+    build:
+      context: ./services/product
+      dockerfile: docker/DockerfileProductMS
+    ports:
+      - "8081:8081"
+    depends_on:
+      - product-db
+    networks:
+      - backend
+networks:
+  backend:
+    driver: bridge

@@ -35,7 +35,7 @@ public class CategoryController {
         return new ResponseEntity<>(this.categoryService.findCategory(id), HttpStatus.OK);
     }
 
-    @DeleteMapping()
+    @DeleteMapping("{id}")
     public ResponseEntity<Object> deleteCategory(@PathVariable Long id){
         var products = productsClient.getProducts(id, null, null, null);
         if (products.size() > 0) {

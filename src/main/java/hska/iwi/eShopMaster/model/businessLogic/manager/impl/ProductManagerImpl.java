@@ -28,8 +28,21 @@ public class ProductManagerImpl implements ProductManager {
 	}
 	
 	public List<Product> getProductsForSearchValues(String searchDescription,
-			Double searchMinPrice, Double searchMaxPrice) {	
-		return new ProductDAO().getProductListByCriteria(searchDescription, searchMinPrice, searchMaxPrice);
+			Double searchMinPrice, Double searchMaxPrice) {
+		Map<String, Object> queryMap = new HashMap<String, Object>();
+		if (searchDescription != null) {
+			queryMap.put("search", searchDescription);
+		}
+
+		if (searchMinPrice != null) {
+			queryMap.put("minimumPrice", searchMinPrice);
+		}
+
+		if (searchMaxPrice != null) {
+			queryMap.put("maximumPrice", searchMaxPrice);
+		}
+
+		return productConnection.search(queryMap);
 	}
 
 	public Product getProductById(int id) {
@@ -42,10 +55,11 @@ public class ProductManagerImpl implements ProductManager {
 	
 	public int addProduct(String name, double price, int categoryId, String details) {
 		Map<String, Object> request = new HashMap<String, Object>();
-		request.put("categoryId", categoryId);
+
 		request.put("name", name);
-		request.put("details", details);
 		request.put("price", price);
+		request.put("categoryId", categoryId);
+		request.put("details", details);
 
 		return productConnection.createProduct(request).getId();
 	}

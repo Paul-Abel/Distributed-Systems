@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 
 import de.shop.product.service.ProductService;
 import de.shop.product.model.Product;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -47,6 +48,9 @@ public class ProductController {
 
     @PostMapping()
     public ResponseEntity<Object> addProduct(@RequestBody Product product){
+        if (product.getCategoryId() == null || product.getName() == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Category ID and name cannot be null");
+        }
         this.service.add(product);
         return new ResponseEntity<>(this.service.findById(product.getId()), HttpStatus.CREATED);
     }

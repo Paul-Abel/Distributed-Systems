@@ -1,6 +1,8 @@
 package de.shop.product.service;
 
 
+import de.shop.product.clients.CategoryClient;
+import de.shop.product.clients.models.Category;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import de.shop.product.repository.ProductRepository;
@@ -20,8 +22,16 @@ public class ProductService {
         this.repository = repository;
     }
 
+    @Autowired
+    private CategoryClient categoryClient;
+
     public List<Product> findAll() {
-        return (List<Product>) this.repository.findAll();
+            List<Product> products  =   (List<Product>) this.repository.findAll();
+            for(Product product : products){
+                Category category = categoryClient.getCategory(product.getCategoryId());
+                product.setCategory(category);
+            }
+            return products;
     }
 
     public Optional<Product> findById(Long id) {

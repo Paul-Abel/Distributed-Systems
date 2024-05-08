@@ -1,9 +1,7 @@
 package de.shop.product.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import de.shop.product.clients.models.Category;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.lang.NonNull;
@@ -31,6 +29,9 @@ public class Product implements Serializable {
     private Long categoryId;
 
     private double price;
+
+    @Transient
+    private Category category;
 
     public Product() {
     }

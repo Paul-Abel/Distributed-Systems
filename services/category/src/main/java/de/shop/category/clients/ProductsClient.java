@@ -2,9 +2,7 @@ package de.shop.category.clients;
 
 import de.shop.category.clients.models.Product;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -16,4 +14,7 @@ public interface ProductsClient {
                               @RequestParam(required = false) String search,
                               @RequestParam(required = false) Double minimumPrice,
                               @RequestParam(required = false) Double maximumPrice);
+
+    @DeleteMapping("{id}")
+    void deleteProduct(@PathVariable("id") Long id);
 }

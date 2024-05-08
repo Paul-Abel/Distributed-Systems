@@ -4,7 +4,7 @@ services:
     hostname: product-db
     build:
       context: ./
-      dockerfile: docker/ProductDatabase
+      dockerfile: docker/DockerfileProductDB
     volumes:
       - "./.data/db:/var/lib/mysql"
     environment:
@@ -17,10 +17,10 @@ services:
         aliases:
           - product-db
 
-  product-service:
+  product-ms:
     build:
       context: ./
-      dockerfile: docker/ProductService
+      dockerfile: docker/DockerfileProductMS
     ports:
       - "8081:8081"
     depends_on:

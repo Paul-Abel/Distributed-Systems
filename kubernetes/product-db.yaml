@@ -9,7 +9,7 @@ data:
   # Encoded root password for MySQL (base64 encoded string 'root')
   mysql_root_password: cm9vdA==
   # MySQL service port (base64 encoded string '3308')
-  mysql_tcp_port: MzMwOA==
+  mysql_tcp_port: MzMwNw==
 
 ---
 # Define a Kubernetes Service object for the MySQL database
@@ -24,7 +24,7 @@ metadata:
 spec:
   # Define the ports and protocols used by this service
   ports:
-    - port: 3307  # The port that the service exposes
+    - port: 3308  # The port that the service exposes
       name: mysql-port  # An identifiable name for the port
   clusterIP: None  # Setting this to None deploys the service as a Headless Service
   selector:
@@ -55,7 +55,7 @@ spec:
           image: distributed-systems-product-db  # The Docker image to use
           imagePullPolicy: Never  # Do not pull the image if it's already present
           ports:
-            - containerPort: 3307  # The port that the container exposes
+            - containerPort: 3308  # The port that the container exposes
               name: mysql-port
           env:
             - name: MYSQL_ROOT_PASSWORD  # Environment variable for MySQL root password

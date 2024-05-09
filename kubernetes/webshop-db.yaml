@@ -1,0 +1,78 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-legacy-configmap
+data:
+  mysql_database: "webshop"
+  mysql_user: "webshopuser"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mysql-legacy-secret
+type: Opaque
+data:
+  mysql_root_password: YzhkZTExMGYzNzMwMGE1M2E5NzE3NDk=
+  mysql_password: MjQwYjJjNmQ1OGZmMmNlMmY1MDhiNDlm
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: webshop-db
+  labels:
+    app: webshop-db
+spec:
+  ports:
+    - port: 3306
+      name: mysql-port
+  clusterIP: None
+  selector:
+    app: webshop-db
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: webshop-db
+spec:
+  serviceName: "webshop-db"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: webshop-db
+  template:
+    metadata:
+      labels:
+        app: webshop-db
+    spec:
+      containers:
+        - name: webshop-db
+          image: distributed-systems-web-shop-db-image
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 3306
+              name: mysql-port
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-legacy-secret
+                  key: mysql_root_password
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-legacy-secret
+                  key: mysql_password
+            - name: MYSQL_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: mysql-legacy-configmap
+                  key: mysql_database
+            - name: MYSQL_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: mysql-legacy-configmap
+                  key: mysql_user
+      volumes:
+        - name: mysql-persistent-storage
+          persistentVolumeClaim:
+            claimName: mysql-pv-claim

@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: product-ms
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: product-ms
+  template:
+    metadata:
+      labels:
+        app: product-ms
+    spec:
+      containers:
+        - name: product-ms
+          image: distributed-systems-product
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8081
+              name: product-port
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: product-ms
+  labels:
+    app: product-ms
+spec:
+  ports:
+    - port: 8081
+      name: product-port
+  clusterIP: None
+  selector:
+    app: product-ms

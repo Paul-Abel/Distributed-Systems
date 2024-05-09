@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: category-ms
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: category-ms
+  template:
+    metadata:
+      labels:
+        app: category-ms
+    spec:
+      containers:
+        - name: category-ms
+          image: distributed-systems-category
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
+              name: category-port
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: category-service
+  labels:
+    app: category-ms
+spec:
+  ports:
+    - port: 8080
+      name: category-port
+  clusterIP: None
+  selector:
+    app: category-ms

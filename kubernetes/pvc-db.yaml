@@ -1,0 +1,39 @@
+# Define a Kubernetes PersistentVolume for storing data outside of pod lifecycle
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  # Name of the PersistentVolume
+  name: mysql-pv-volume
+  # Labels to help identify or categorize the PersistentVolume
+  labels:
+    type: local
+spec:
+  # Specify the storage class name; 'manual' implies manual provisioning
+  storageClassName: manual
+  # Define the storage capacity of the PersistentVolume
+  capacity:
+    storage: 1Gi  # 1 GiB of storage
+  # Define the access modes for the volume
+  accessModes:
+    - ReadWriteOnce  # The volume can be mounted as read-write by a single node
+  # Define the actual location on the host that backs this volume
+  hostPath:
+    path: "/mnt/data"  # Path on the host where the data will be stored
+
+---
+# Define a PersistentVolumeClaim which applications use to request physical storage
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  # Name of the PersistentVolumeClaim
+  name: mysql-pv-claim
+spec:
+  # The storage class used by this claim must match the PV's storage class
+  storageClassName: manual
+  # Access modes should match the PV's specification
+  accessModes:
+    - ReadWriteOnce  # Must be compatible with the PV's access mode
+  # Storage resource requests
+  resources:
+    requests:
+      storage: 1Gi  # Requests 1 GiB of storage, matching the PV's capacity

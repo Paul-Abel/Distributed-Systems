@@ -1,0 +1,74 @@
+# Define a Kubernetes Secret object for storing sensitive data such as passwords
+apiVersion: v1
+kind: Secret
+metadata:
+  # Name of the Secret object
+  name: mysql-category-secret
+type: Opaque  # Indicates that the secret contains opaque data
+data:
+  # Encoded root password for MySQL (base64 encoded string 'root')
+  mysql_root_password: cm9vdA==
+  # MySQL service port (base64 encoded string '3308')
+  mysql_tcp_port: MzMwOA==
+
+---
+# Define a Kubernetes Service object for the MySQL database
+apiVersion: v1
+kind: Service
+metadata:
+  # Name of the Service object
+  name: category-db
+  # Labels to associate with this service, used for organizing and selecting subsets
+  labels:
+    app: category-db
+spec:
+  # Define the ports and protocols used by this service
+  ports:
+    - port: 3308  # The port that the service exposes
+      name: mysql-port  # An identifiable name for the port
+  clusterIP: None  # Setting this to None deploys the service as a Headless Service
+  selector:
+    app: category-db  # Selects pods with labels matching this value
+
+---
+# Define a StatefulSet for managing stateful applications, here used for MySQL
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  # Name of the StatefulSet
+  name: category-db
+spec:
+  # The serviceName that pods use to access the database
+  serviceName: "category-db"
+  # Number of desired replicas
+  replicas: 1
+  selector:
+    matchLabels:
+      app: category-db  # Ensures the StatefulSet manages pods labeled with 'category-db'
+  template:
+    metadata:
+      labels:
+        app: category-db  # Labels assigned to all pods created from this template
+    spec:
+      containers:
+        - name: category-db  # Name of the container
+          image: distributed-systems-category-db  # The Docker image to use
+          imagePullPolicy: Never  # Do not pull the image if it's already present
+          ports:
+            - containerPort: 3308  # The port that the container exposes
+              name: mysql-port
+          env:
+            - name: MYSQL_ROOT_PASSWORD  # Environment variable for MySQL root password
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-category-secret  # Reference to the secret object
+                  key: mysql_root_password  # Key within the secret object
+            - name: MYSQL_TCP_PORT  # Environment variable for MySQL TCP port
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-category-secret
+                  key: mysql_tcp_port
+      volumes:
+        - name: mysql-persistent-storage  # Name of the volume for persistent storage
+          persistentVolumeClaim:
+            claimName: mysql-pv-claim  # PersistentVolumeClaim that the volume uses

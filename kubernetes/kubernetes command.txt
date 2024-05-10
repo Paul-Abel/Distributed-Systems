@@ -1,0 +1,37 @@
+kubectl apply -f .\kubernetes\pvc-db.yaml
+kubectl apply -f .\kubernetes\webshop-db.yaml
+kubectl apply -f .\kubernetes\category-db.yaml
+kubectl apply -f .\kubernetes\product-db.yaml
+kubectl apply -f .\kubernetes\category-ms.yaml
+kubectl apply -f .\kubernetes\product-ms.yaml
+kubectl apply -f .\kubernetes\webshop-ms.yaml
+kubectl apply -f .\kubernetes\istio.yaml
+
+
+kubectl delete -f ./kubernetes/pvc-db.yaml
+kubectl delete -f ./kubernetes/webshop-db.yaml
+kubectl delete -f ./kubernetes/category-db.yaml
+kubectl delete -f ./kubernetes/product-db.yaml
+kubectl delete -f ./kubernetes/category-ms.yaml
+kubectl delete -f ./kubernetes/product-ms.yaml
+kubectl delete -f ./kubernetes/webshop-ms.yaml
+kubectl delete -f ./kubernetes/istio.yaml
+
+
+
+kubectl apply -f C:\Users\abelp\istio\istio-1.21.2\samples\addons
+
+
+kubectl get pod -n istio-system
+
+http://192.168.49.2/EShop-1.0.0
+
+
+# external system
+kubectl get svc
+
+
+kubectl get svc -n istio-system
+
+
+minikube tunnel

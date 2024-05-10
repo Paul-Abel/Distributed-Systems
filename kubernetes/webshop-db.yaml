@@ -18,7 +18,7 @@ data:
 apiVersion: v1
 kind: Service
 metadata:
-  name: webshop-db
+  name: web-shop-db-image
   labels:
     app: webshop-db
 spec:

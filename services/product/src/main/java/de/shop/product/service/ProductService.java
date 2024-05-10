@@ -35,7 +35,24 @@ public class ProductService {
     }
 
     public Optional<Product> findById(Long id) {
-        return this.repository.findById(id);
+        // Retrieve the product from the repository
+        Optional<Product> optionalProduct = repository.findById(id);
+
+        // Check if the product is present
+        if (optionalProduct.isPresent()) {
+            // Get the product from Optional
+            Product product = optionalProduct.get();
+
+            // Retrieve and set the category, assuming getCategory takes a Product and returns a Category
+            Category category = categoryClient.getCategory(product.getCategoryId());
+            product.setCategory(category);
+
+            // Return the product as Optional
+            return Optional.of(product);
+        }
+
+        // Return empty Optional if product was not found
+        return Optional.empty();
     }
 
     public List<Product> findByCategory(Long categoryId) {

@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: product
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: product
+  template:
+    metadata:
+      labels:
+        app: product
+    spec:
+      containers:
+        - name: product
+          image: distributed-systems-product
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8081
+              name: product-port
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: product
+  labels:
+    app: product
+spec:
+  type: LoadBalancer  # Change this to LoadBalancer
+  ports:
+    - port: 8081
+      targetPort: 8081
+      name: product-port
+  selector:
+    app: product
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: category
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: category
+  template:
+    metadata:
+      labels:
+        app: category
+    spec:
+      containers:
+        - name: category
+          image: distributed-systems-category
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
+              name: category-port
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: category
+  labels:
+    app: category
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 8080
+      targetPort: 8080
+      name: category-port
+  selector:
+    app: category

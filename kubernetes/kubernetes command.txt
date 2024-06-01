@@ -24,29 +24,80 @@
      minikube addons disable metrics-server
 
 ### Get everthing
+    kubectl get all --all-namespaces
+
     kubectl get deployments --all-namespaces
     kubectl get services --all-namespaces
     kubectl get statefulsets --all-namespaces
     kubectl get daemonsets --all-namespaces
 
+### Delete Istio Addons
+     kubectl delete deployments grafana -n istio-system
+     kubectl delete deployments kiali  -n istio-system
+     kubectl delete deployments prometheus  -n istio-system
+
+### Scale Pods / Deployments
+    kubectl scale deployment category --replicas=3
+    kubectl scale deployment product --replicas=3
+
+## Switch context and enable istio sidepod injection
+    kubectl config get-contexts
+    kubectl config use-context docker-desktop
+    kubectl label namespace default istio-injection=enabled
+
+## Get external ip address
+    kubectl get svc istio-ingressgateway -n istio-system
+    kubectl get svc
+    kubectl get svc -n istio-system
 
 
+## Istio
+    istioctl install --set profile=demo -y
+    kubectl apply -f C:\Users\abelp\istio\istio-1.21.2\samples\addons
+    kubectl label namespace default istio-injection=enabled
+    kubectl get namespace default --show-labels
+    istioctl dashboard kiali
+    istioctl dashboard grafana
+    istioctl dashboard prometheus
 
-minikube image load distributed-systems-product
 
-kubectl apply -f C:\Users\abelp\istio\istio-1.21.2\samples\addons
+## Loadbalanecer
+    kubectl apply -f .\kubernetes\pvc-db.yaml
+    kubectl apply -f .\kubernetes\category-db.yaml
+    kubectl apply -f .\kubernetes\product-db.yaml
+    kubectl apply -f .\kubernetes\loadbalancer.yaml
 
+    kubectl delete -f .\kubernetes\pvc-db.yaml
+    kubectl delete -f .\kubernetes\category-db.yaml
+    kubectl delete -f .\kubernetes\product-db.yaml
+    kubectl delete -f ./kubernetes/loadbalancer.yaml
+
+## Abgabe
+    kubectl get pods
+    kubectl logs <pod_name>
+    kubectl delete pod <pod-name>
+
+    Wenn loadbalacing nicht funktioniert deaktiviere Connection = keep-alive
+    Latenzen im Istio Mesh Dashboard
+
+## ENV Var from pods
+     kubectl exec <pod-name> -- env
+
+
+kubectl describe pod <pod_name>
 
 kubectl get pod -n istio-system
 
 # external system
-kubectl get svc
 
-kubectl get svc -n istio-system
 
 
 minikube tunnel
 
 
-kubectl apply -f C:\Users\abelp\istio\istio-1.21.2\samples\addons
-istioctl dashboard kiali
+
+
+
+
+docker-compose  -f .\docker-compose-ms.yml up
+

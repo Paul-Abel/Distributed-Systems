@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: product
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: product
@@ -28,9 +28,10 @@ metadata:
   labels:
     app: product
 spec:
+  type: ClusterIP  # Change this to LoadBalancer
   ports:
     - port: 8081
+      targetPort: 8081
       name: product-port
-  clusterIP: None
   selector:
     app: product

@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: category
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: category
@@ -28,9 +28,10 @@ metadata:
   labels:
     app: category
 spec:
+  type: ClusterIP
   ports:
     - port: 8080
+      targetPort: 8080
       name: category-port
-  clusterIP: None
   selector:
     app: category

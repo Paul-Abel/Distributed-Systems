@@ -1,5 +1,7 @@
 package de.shop.product.controller;
 
+import de.shop.product.clients.CategoryClient;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +18,9 @@ import java.util.Optional;
 public class ProductController {
 
     private final ProductService service;
+
+    @Autowired
+    private CategoryClient categoryClient;
 
     public ProductController(ProductService service) {
         this.service = service;
@@ -51,6 +56,11 @@ public class ProductController {
         if (product.getCategoryId() == null || product.getName() == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Category ID and name cannot be null");
         }
+        var category = categoryClient.getCategory(product.getCategoryId());
+        if (category == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Category ID not known");
+        }
+
         this.service.add(product);
         return new ResponseEntity<>(this.service.findById(product.getId()), HttpStatus.CREATED);
     }

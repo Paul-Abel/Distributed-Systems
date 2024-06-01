@@ -24,7 +24,7 @@ metadata:
 spec:
   # Define the ports and protocols used by this service
   ports:
-    - port: 3308  # The port that the service exposes
+    - port: 3307  # The port that the service exposes
       name: mysql-port  # An identifiable name for the port
   clusterIP: None  # Setting this to None deploys the service as a Headless Service
   selector:
